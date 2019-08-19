@@ -18,9 +18,9 @@ $api->version('v1', function($api){
     $api->group(['middleware' => 'api.auth'], function ($api) {
         $api->get('/me', function(){
             $data = [
-                "name" => "Indra Hehe Aja",
+                "name" => "Ratna",
                 "nickname" => "goeroeku",
-                "gender" => "Male",
+                "gender" => "Female",
                 "class" => "Pro Akut",
             ];
             return ['status' => 200, 'data' =>  $data];
