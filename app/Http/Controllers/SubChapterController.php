@@ -3,9 +3,47 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\SubChapter;
+use Validator;
 
 class SubChapterController extends Controller
 {
+    /**
+     * success response method.
+     *
+     * @return \Illuminate\Http\Response
+     */
+     public function sendResponse($result, $message)
+     {
+         $response = [
+             'success' => true,
+             'data'    => $result,
+             'message' => $message,
+         ];
+ 
+         return response()->json($response, 200);
+     }
+
+    /**
+     * return error response.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function sendError($error, $errorMessages = [], $code = 404)
+    {
+    	$response = [
+            'success' => false,
+            'message' => $error,
+        ];
+
+
+        if(!empty($errorMessages)){
+            $response['data'] = $errorMessages;
+        }
+
+
+        return response()->json($response, $code);
+    }
     /**
      * Display a listing of the resource.
      *
@@ -13,7 +51,8 @@ class SubChapterController extends Controller
      */
     public function index()
     {
-        //
+        $subchapter = SubChapter::all();
+        return $this->sendResponse($subchapter->toArray(), 'Subchapter retrieved successfully.');
     }
 
     /**
@@ -34,7 +73,22 @@ class SubChapterController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $input = $request->all();
+
+        $validator = Validator::make($input, [
+            'uuid' => 'required',
+            'thumbnail' => 'required',
+            'content' => 'required',
+            'description' => 'required'
+        ]);
+
+        if($validator->fails()){
+            return $this->sendError('Validation Error.', $validator->errors());       
+        }
+
+        $subchapter = SubChapter::create($input);
+
+        return $this->sendResponse($subchapter->toArray(), 'Subchapter created successfully.');
     }
 
     /**
@@ -45,7 +99,15 @@ class SubChapterController extends Controller
      */
     public function show($id)
     {
-        //
+        $subchapter = SubChapter::find($id);
+
+
+        if (is_null($subchapter)) {
+            return $this->sendError('Subchapter not found.');
+        }
+
+
+        return $this->sendResponse($subchapter->toArray(), 'Subchapter retrieved successfully.');
     }
 
     /**
@@ -68,7 +130,29 @@ class SubChapterController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $input = $request->all();
+
+
+        $validator = Validator::make($input, [
+            'uuid' => 'required',
+            'thumbnail' => 'required',
+            'content' => 'required',
+            'description' => 'required'
+        ]);
+
+
+        if($validator->fails()){
+            return $this->sendError('Validation Error.', $validator->errors());       
+        }
+
+        $subchapter->uuid = $input['uuid'];
+        $subchapter->thumbnail = $input['thumbnail'];
+        $subchapter->description = $input['description'];
+        $subchapter->content = $input['content'];
+        $subchapter->save();
+
+
+        return $this->sendResponse($subchapter->toArray(), 'Subchapter updated successfully.');
     }
 
     /**
@@ -79,6 +163,7 @@ class SubChapterController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $subchapter->delete();
+        return $this->sendResponse($subchapter->toArray(), 'Subchapter deleted successfully.');
     }
 }

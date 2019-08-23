@@ -29,4 +29,5 @@ $api->version('v1', function($api){
     });
     $api->post('/login' , 'App\Http\Controllers\AuthController@login');
     $api->post('/register' , 'App\Http\Controllers\AuthController@register');
+    $api->post('/subchapter' , 'App\Http\Controllers\SubChapterController@store');
 });

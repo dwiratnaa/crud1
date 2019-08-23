@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateSubChaptersTable extends Migration
+class SubChapter extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,12 @@ class CreateSubChaptersTable extends Migration
      */
     public function up()
     {
-        Schema::create('sub_chapters', function (Blueprint $table) {
+        Schema::create('subchapter', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->uuid('uuid')->nullable();
+            $table->string('thumbnail')->nullable();
+            $table->string('description')->nullable();
+            $table->text('content')->nullable();
             $table->timestamps();
         });
     }
